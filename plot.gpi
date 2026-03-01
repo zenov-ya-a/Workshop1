@@ -1,0 +1,30 @@
+#! /usr/bin/gnuplot -persist
+
+set key right bottom
+set offsets graph 0.1, graph 0.1, graph 0.1, graph 0.1
+set datafile separator ';'
+
+# set term qt 0 title "Data"
+# set title "Данные"
+set terminal png size 800,600
+set output "plot_data.png"
+
+set title "Data"
+
+set grid
+set xlabel "Number" 
+set ylabel "Data"
+
+f(x) = a*x + b
+fit f(x) 'data_raw.csv' using 1:2 via a, b
+
+plot "data_raw.csv" using 1:2 with points title "Experiment", f(x) with lines title "Tread line"
+
+# set term qt 1 title "Гистограмма"
+# set title "Гистограмма"
+set terminal png size 800,600
+set output "gistorgam.png"
+
+set style fill solid 1.0 border -1
+
+plot "gistogram.csv" using 1:2 with boxes title "Gistogram"

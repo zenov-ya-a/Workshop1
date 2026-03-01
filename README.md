@@ -1,1 +1,4 @@
 # My Project
+
+./init.sh
+

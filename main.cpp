@@ -1,4 +1,5 @@
 
+#include <algorithm>
 #include <cmath>
 #include <fstream>
 #include <iomanip>
@@ -123,13 +124,40 @@ public:
         student_coef(data.size(), alpha) * standard_error_of_average();
     return {get_median(), delta};
   }
+  // gistogram, start, delta
+  std::tuple<std::vector<size_t>, double, double>
+  build_gistorgam(size_t step_count) const {
+    auto sorted = data;
+    std::sort(sorted.begin(), sorted.end());
+
+    auto start = sorted.front();
+    auto end = sorted.back();
+    auto delta = (end - start) / step_count;
+    /* |N1|N2|N3|N4|
+     * 0  1  2  3
+     * [ )[ )[ )[ ]
+     * s 1d 2d 3d e
+     */
+    size_t j = 0;
+    std::vector<size_t> res(step_count, 0);
+    for (size_t i = 0; i < sorted.size() - 1; ++i) {
+      if (sorted[i] >= start + delta * (j + 1)) {
+        j += 1;
+      }
+      res[j] += 1;
+    }
+    res.back() += 1;
+
+    return {res, start, delta};
+  }
 };
 
 std::ostream &lab1_table(std::ostream &out, const statistic &s) {
   auto d = s.deviations_from_arithmetic_mean();
-  out << "N;Source;d;d_squre";
+  out << "N;Source;d;d_squre" << std::endl;
   for (size_t i = 0; i < s.data.size(); ++i) {
-    out << i << ";" << s.data[i] << ";" << d[i] << ";" << d[i] * d[i];
+    out << i << ";" << s.data[i] << ";" << d[i] << ";" << d[i] * d[i]
+        << std::endl;
   }
   return out;
 }
@@ -147,6 +175,24 @@ int main() {
 
   auto [m, d] = s.confidence_interval_for_mean(0.98);
   std::cout << "X is " << m - d << " " << m + d << std::endl;
+  std::cout << "d(50, 0,98) = " << d << std::endl;
+
+  std::ofstream fout("lab_table.csv");
+  lab1_table(fout, s);
+
+  {
+    std::ofstream fout("gistogram.csv");
+    auto [res, start, delta] = s.build_gistorgam(20);
+    fout << "X;dN" << std::endl;
+    for (int i = 0; i < res.size(); ++i) {
+      fout << start + delta * (i + 0.5) << ";" << res[i] << std::endl;
+    }
+  }
+  double max = 0;
+  for (auto x : s.data) {
+    max = std::max(max, 1 + 5 * 10e-7 * x);
+  }
+  std::cout << "max tool error = " << max << std::endl;
 
   return 0;
 }
