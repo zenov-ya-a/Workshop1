@@ -29,20 +29,23 @@ struct statistic {
   }
   friend std::ostream &operator<<(std::ostream &out, const statistic &s) {
     for (auto x : s.data) {
-      out << std::setprecision(4) << x << " ";
+      out << x << " ";
     }
     return out;
   }
 
 private:
-  static int student_coef(size_t n, double alpha) {
-    boost::math::students_t dist(n);
+  static double student_coef(size_t n, double alpha) {
+    if (n <= 1) {
+      return 0.0;
+    }
+    boost::math::students_t dist(n - 1);
     /*
      *                     alpha
      <----|--------------------------------------|---->
         -t_stat              0                 +t_stat
     */
-    double t_stat = boost::math::quantile(dist, 0.5 + alpha / 2);
+    auto t_stat = boost::math::quantile(dist, 0.5 + alpha / 2.0);
     return t_stat;
   }
 
@@ -80,7 +83,7 @@ public:
   }
 
   double sum_of_deviations_from_arithmetic_mean() const {
-    double res;
+    double res = 0;
     double mean = get_median();
 
     for (auto x : data) {
@@ -89,7 +92,7 @@ public:
     return res;
   }
   double sum_of_deviations_from_arithmetic_mean_square() const {
-    double res;
+    double res = 0;
     double mean = get_median();
 
     for (auto x : data) {
@@ -115,13 +118,17 @@ public:
     if (data.size() < 2) {
       return 0;
     }
+    auto n = data.size();
     return sqrt(sum_of_deviations_from_arithmetic_mean_square() /
-                (data.size() - 1) / data.size());
+                ((n - 1) * n));
   }
   // median + delta
   std::pair<double, double> confidence_interval_for_mean(double alpha) const {
     double delta =
         student_coef(data.size(), alpha) * standard_error_of_average();
+    std::cout << "student: " << student_coef(data.size(), alpha) << std::endl
+              << "eror of average: " << standard_error_of_average()
+              << std::endl;
     return {get_median(), delta};
   }
   // gistogram, start, delta
@@ -156,26 +163,30 @@ std::ostream &lab1_table(std::ostream &out, const statistic &s) {
   auto d = s.deviations_from_arithmetic_mean();
   out << "N;Source;d;d_squre" << std::endl;
   for (size_t i = 0; i < s.data.size(); ++i) {
-    out << i << ";" << s.data[i] << ";" << d[i] << ";" << d[i] * d[i]
+    out << i + 1 << ";" << s.data[i] << ";" << d[i] << ";" << d[i] * d[i]
         << std::endl;
   }
   return out;
 }
 
 int main() {
+  std::cout << std::fixed << std::setprecision(4);
   std::cout << "lab: 1, file: data_raw.csv" << std::endl;
 
   statistic s;
 
   s.from_file("data_raw.csv");
-  std::cout << "data: " << s << std::endl;
+  for (auto &x : s.data) {
+    x *= 1000;
+  }
+  std::cout << "data (Hz): " << s << std::endl;
 
   auto median = s.get_median();
-  std::cout << "median " << median << std::endl;
+  std::cout << "median " << median << " Hz" << std::endl;
 
   auto [m, d] = s.confidence_interval_for_mean(0.98);
-  std::cout << "X is " << m - d << " " << m + d << std::endl;
-  std::cout << "d(50, 0,98) = " << d << std::endl;
+  std::cout << "X is " << m - d << " Hz" << " " << m + d << " Hz" << std::endl;
+  std::cout << "d(50, 0,98) = " << d << " Hz" << std::endl;
 
   std::ofstream fout("lab_table.csv");
   lab1_table(fout, s);
@@ -185,14 +196,15 @@ int main() {
     auto [res, start, delta] = s.build_gistorgam(20);
     fout << "X;dN" << std::endl;
     for (int i = 0; i < res.size(); ++i) {
-      fout << start + delta * (i + 0.5) << ";" << res[i] << std::endl;
+      fout << start + delta * (i + 0.5) << ";"
+           << (double)res[i] / (double)s.data.size() << std::endl;
     }
   }
   double max = 0;
   for (auto x : s.data) {
-    max = std::max(max, 1 + 5 * 10e-7 * x);
+    max = std::max(max, 1 + 5 * 10e-7 * x * 1000);
   }
-  std::cout << "max tool error = " << max << std::endl;
+  std::cout << "max tool error = " << max / 1000 << " Hz" << std::endl;
 
   return 0;
 }
