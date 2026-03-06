@@ -161,10 +161,10 @@ public:
 
 std::ostream &lab1_table(std::ostream &out, const statistic &s) {
   auto d = s.deviations_from_arithmetic_mean();
-  out << "N;Source;d;d_squre" << std::endl;
+  out << "N;Source KHz;d kHz;d_squre kHz" << std::endl;
   for (size_t i = 0; i < s.data.size(); ++i) {
-    out << i + 1 << ";" << s.data[i] << ";" << d[i] << ";" << d[i] * d[i]
-        << std::endl;
+    out << i + 1 << ";" << s.data[i] / 1000 << ";" << d[i] / 1000 << ";"
+        << d[i] * d[i] / 1000 << std::endl;
   }
   return out;
 }
@@ -176,10 +176,11 @@ int main() {
   statistic s;
 
   s.from_file("data_raw.csv");
+  /* translate from kHz to Hz */
   for (auto &x : s.data) {
     x *= 1000;
   }
-  std::cout << "data (Hz): " << s << std::endl;
+  std::cout << "data (Hz): " << std::endl << s << std::endl;
 
   auto median = s.get_median();
   std::cout << "median " << median << " Hz" << std::endl;
@@ -202,9 +203,9 @@ int main() {
   }
   double max = 0;
   for (auto x : s.data) {
-    max = std::max(max, 1 + 5 * 10e-7 * x * 1000);
+    max = std::max(max, 1 + 5 * 10e-7 * x);
   }
-  std::cout << "max tool error = " << max / 1000 << " Hz" << std::endl;
+  std::cout << "max tool error = " << max << " Hz" << std::endl;
 
   return 0;
 }

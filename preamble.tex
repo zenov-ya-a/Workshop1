@@ -1,0 +1,174 @@
+\usepackage{geometry}
+\usepackage{amsmath,bm}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{esint}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[utf8]{inputenc}
+\usepackage[T2A]{fontenc}
+%\usepackage[lutf8x]{luainputenc}
+
+%\usepackage{fontspec}
+%\setmainfont{CMU Serif}
+%\setsansfont{CMU Sans Serif}
+%\setmonofont{CMU Typewriter Text}
+
+\usepackage{pgfplotstable}
+\pgfplotsset{compat=1.18}
+
+\usepackage[greek.polutoniko,english,russian]{babel}
+% локализация и переносы
+\usepackage{latexsym}
+\usepackage{hhline}
+\usepackage{multirow}
+\usepackage{vmargin,indentfirst} 
+\setmarginsrb{20mm}{15mm}{15mm}{15mm}{0mm}{0mm}{0mm}{10mm}
+\usepackage[multiple]{footmisc}
+\usepackage{hyperref}
+\usepackage{multirow}
+\usepackage{pdflscape}
+%\numberwithin{equation}{section}
+\usepackage[labelsep=period]{caption}
+
+
+% команда для переноса строки внутри ячейки таблицы
+\newcommand{\specialcell}[2][l]{%
+  \begin{tabular}[#1]{@{}l@{}}#2\end{tabular}}
+
+  \usepackage{physics}
+
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows.meta}
+
+%\usepackage[margin=0.3in,bmargin=0.5in]{geometry}
+
+%\usepackage{CJKutf8}%Chinese characters
+
+
+\pagestyle{plain}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem*{proposition}{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{exercise}{Exercise}[section]
+
+\theoremstyle{remark}
+\newtheorem*{example}{Example}
+\newtheorem*{examples}{Examples}
+\newtheorem*{remark}{Remark}
+\newtheorem*{hint}{Hint}
+
+\theoremstyle{definition}
+\newtheorem*{definition}{Definition}
+
+\renewcommand{\emptyset}{\varnothing}
+\newcommand\ph{\varphi}
+\newcommand\eps{\varepsilon}
+
+\newcommand\mbZ{\mathbb Z}
+\newcommand\mbC{\mathbb C}
+\newcommand\mbR{\mathbb R}
+\newcommand\mbN{\mathbb N}
+\newcommand\mbQ{\mathbb Q}
+\newcommand\mbE{\mathbb E}
+
+\newcommand\mcB{\mathcal B}
+\newcommand\mcC{\mathcal C}
+\newcommand\mcF{\mathcal F}
+\newcommand\mcG{\mathcal G}
+\newcommand\mcJ{\mathcal J}
+
+
+\newcommand\la{\langle}
+\newcommand\ra{\rangle}
+\newcommand\ol{\overline}
+\newcommand\ora{\overrightarrow}
+\newcommand\rsa{\rightsquigarrow}
+
+\DeclareMathOperator{\M}{M}
+\DeclareMathOperator{\Span}{Span}
+\DeclareMathOperator{\LL}{\cal L}
+\DeclareMathOperator{\id}{id}
+\DeclareMathOperator{\Ker}{Ker}
+\DeclareMathOperator{\Img}{Im}
+\DeclareMathOperator{\rk}{rank}
+%\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\cof}{cof}
+
+\newcommand\dfn[1]{{\bf #1}}
+\renewcommand{\thesubsubsection}{}
+
+\newcounter{saveenumi}
+\newcommand{\seti}{\setcounter{saveenumi}{\value{enumi}}}
+\newcommand{\conti}{\setcounter{enumi}{\value{saveenumi}}}
+
+\newcommand{\vct}[1]{\overrightarrow{#1}}
+\newcommand{\bvct}[1]{\boldsymbol{#1}}
+\newcommand{\codir}{\upuparrows}
+\newcommand{\ncodir}{\uparrow \downarrow }
+
+%% title background
+
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\const}{const}
+\newcommand{\dprodd}[2]{\vct{#1}\cdot\vct{#2}}
+\newcommand{\dprod}[2]{\bvct{#1}\cdot\bvct{#2}}
+
+\newcommand{\cprod}[2]{\bvct{#1}\times\bvct{#2}}
+
+\newcommand{\mprod}[3]{(\bvct{#1},\bvct{#2},\bvct{#3})}
+
+\newcommand{\vecsys}{{$\bvct{a}_1$ , . . . , $\bvct{a}_n$ {}}}
+
+\newcommand{\Problem}[1]{\vspace{\baselineskip}\textbf{Problem {#1}}\par}
+\newcommand{\Solution}{\vspace{\baselineskip}\textbf{Solution}\par}
+
+\newcommand*\coord[1]{%
+  \begin{pmatrix}
+    #1
+  \end{pmatrix}%
+}
+
+\renewcommand{\d}[1]{\ensuremath{\operatorname{d}\!{#1}}}
+
+\usepackage{tkz-euclide}
+%\usetkzobj{all}
+
+\usepackage{subcaption}
+
+\usepackage{enumitem}
+
+\usepackage{datetime}
+\newdateformat{yeardate}{\THEYEAR}
+
+\usepackage[toc,page]{appendix}
+
+\def\contentsname{Содержание}
+
+\usepackage{listings}
+
+\lstset{% Собственно настройки вида листинга
+inputencoding=utf8, extendedchars=\true, keepspaces = true, % поддержка кириллицы и пробелов в комментариях
+language=C++,            % выбор языка для подсветки (здесь это Pascal)
+basicstyle=\small\sffamily, % размер и начертание шрифта для подсветки кода
+numbers=left,               % где поставить нумерацию строк (слева\справа)
+numberstyle=\tiny,          % размер шрифта для номеров строк
+stepnumber=1,               % размер шага между двумя номерами строк
+numbersep=5pt,              % как далеко отстоят номера строк от подсвечиваемого кода
+backgroundcolor=\color{white}, % цвет фона подсветки - используем \usepackage{color}
+showspaces=false,           % показывать или нет пробелы специальными отступами
+showstringspaces=false,     % показывать или нет пробелы в строках
+showtabs=false,             % показывать или нет табуляцию в строках
+frame=single,               % рисовать рамку вокруг кода
+tabsize=2,                  % размер табуляции по умолчанию равен 2 пробелам
+captionpos=t,               % позиция заголовка вверху [t] или внизу [b] 
+breaklines=true,            % автоматически переносить строки (да\нет)
+breakatwhitespace=false,    % переносить строки только если есть пробел
+escapeinside={\%*}{*)}      % если нужно добавить комментарии в коде
+}
