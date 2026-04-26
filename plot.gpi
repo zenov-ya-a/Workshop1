@@ -10,7 +10,7 @@ set key left bottom Left reverse samplen 2
 
 set grid
 set xlabel "N"
-set ylabel "Частота, Гц"
+set ylabel "Частота, кГц"
 
 data_file = "lab_table.csv"
 
@@ -19,8 +19,25 @@ fit f(x) data_file using 1:2 via a, b
 
 plot data_file using 1:2 with points pt 7 ps 1.5 title "Эксперементальные данные", f(x) with lines title "Линия тренда"
 
-# set term qt 1 title "Гистограмма"
+
 set terminal png size 800,600
+set output "plot_data_del.png"
+set title "Распредление данных"
+set key left bottom Left reverse samplen 2
+
+set grid
+set xlabel "N"
+set ylabel "Частота, кГц"
+
+data_file = "lab_table_del.csv"
+
+f(x) = a * x + b
+fit f(x) data_file using 1:2 via a, b
+
+plot data_file using 1:2 with points pt 7 ps 1.5 title "Эксперементальные данные", f(x) with lines title "Линия тренда"
+
+
+# set term qt 1 title "Гистограмма"
 set output "gistogram.png"
 set title "Гистограмма"
 set offsets graph 0.1, graph 0.1
@@ -28,8 +45,35 @@ set key left top
 
 set grid
 set xlabel "Частота, Гц"
-set ylabel "dN / (N  d)"
+set ylabel "dN / df"
 
 set style fill solid 1.0 border -1
 
 plot "gistogram.csv" using 1:2 with boxes title ""
+
+
+set output "gistogram_del.png"
+set title "Гистограмма"
+set offsets graph 0.1, graph 0.1
+set key left top
+
+set grid
+set xlabel "Частота, Гц"
+set ylabel "dN / df"
+
+set style fill solid 1.0 border -1
+
+plot "gistogram_del.csv" using 1:2 with boxes title ""
+
+set output "gistogram_del'.png"
+set title "Гистограмма"
+set offsets graph 0.1, graph 0.1
+set key left top
+
+set grid
+set xlabel "Частота, Гц"
+set ylabel "dN / df"
+
+set style fill solid 1.0 border -1
+
+plot "gistogram_del'.csv" using 1:2 with boxes title ""
